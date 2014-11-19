@@ -39,7 +39,8 @@ class Package(models.Model):
                             upload_to='django_banzai/package')
     status = models.CharField(_('status code'), choices=STATUS_CODES,
                               max_length=4, blank=True)
-    pack_id = models.CharField(_('package ID'), max_length=100)
+    pack_id = models.CharField(_('package ID'), max_length=100,
+                               blank=True)
 
     emails_all = models.PositiveIntegerField(_('emails all'))
     emails_correct = models.PositiveIntegerField(_('emails correct'),
