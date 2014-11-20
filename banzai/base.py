@@ -126,9 +126,9 @@ class BanzaiAPI(object):
 
     def __init__(self, package_obj):
         self.package_obj = package_obj
-        self.api_key = BANZAI_API_KEY
-        self.api_url = 'http://{0}/api/{1}/'.format(BANZAI_API_DOMAIN,
-                                                    BANZAI_API_VERSION)
+        self._api_key = BANZAI_API_KEY
+        self._api_url = 'http://{0}/api/{1}/'.format(BANZAI_API_DOMAIN,
+                                                     BANZAI_API_VERSION)
 
     def add(self):
         pass
