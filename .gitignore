@@ -55,3 +55,4 @@ target/
 
 # Project specific files
 test_project/sqlite3.db
+django_banzai/
