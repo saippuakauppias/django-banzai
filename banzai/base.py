@@ -7,7 +7,7 @@ from banzai.settings import (BANZAI_API_DOMAIN, BANZAI_API_VERSION,
 class MailPackage(object):
 
     def __init__(self, email_from, name_from, subject, message, send_at=None,
-                 headers=[], attach_images='0', description=''):
+                 headers=[], attach_images=u'0', description=u''):
         self.email_from = email_from
         self.name_from = name_from
         self.subject = subject
@@ -21,7 +21,7 @@ class MailPackage(object):
         self._xml = etree.Element('list')
         self._generation_complete = False
 
-    def add_user(self, email_to, name_to='', header={}, fields={}):
+    def add_user(self, email_to, name_to=u'', header={}, fields={}):
         if self._generation_complete:
             raise RuntimeError('Impossibly add user, because '
                                'generation already complete!')
