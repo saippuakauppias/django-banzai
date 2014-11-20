@@ -3,7 +3,10 @@ from lxml import etree
 from datetime import datetime
 
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.files.base import ContentFile
+
+import requests
 
 from banzai.models import Package
 from banzai.settings import (BANZAI_API_DOMAIN, BANZAI_API_VERSION,
@@ -147,13 +150,46 @@ class MailPackage(object):
 class BanzaiAPI(object):
 
     def __init__(self, package_obj):
-        self.package_obj = package_obj
+        self._package = package_obj
+        self._package_url = None
+
         self._api_key = BANZAI_API_KEY
         self._api_url = 'http://{0}/api/{1}/'.format(BANZAI_API_DOMAIN,
                                                      BANZAI_API_VERSION)
 
+    @property
+    def package_url(self):
+        if self._package_url is None:
+            current_site = Site.objects.get_current()
+            url = 'http://{0}{1}{2}'.format(
+                current_site.domain,
+                settings.MEDIA_URL,
+                self._package.file.url
+            )
+            self._package_url = url
+        return self._package_url
+
+    def _parse_xml(self, data):
+        parser = etree.XMLParser()
+        parser.feed(data)
+        return parser.close()
+
     def add(self):
-        pass
+        get_params = {'key': self._api_key, 'url': self.package_url}
+        api_url = '{0}add_package'.format(self._api_url)
+        req = requests.get(api_url, params=get_params)
+
+        elem = self._parse_xml(req.content)
+
+        pack_id = elem.find('pack_id')
+        if pack_id is not None:
+            self._package.pack_id = pack_id.text
+
+        status = elem.find('status')
+        if status is not None:
+            self._package.status = status.text
+
+        self._package.save()
 
     def fast_add(self):
         pass
