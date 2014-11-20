@@ -19,7 +19,7 @@ setup(
     author_email='progr.mail@gmail.com',
     include_package_data=True,
     packages=find_packages(),
-    install_requires=['requests', 'lxml'],
+    install_requires=['requests', 'lxml', 'django'],
     classifiers=[
         'Development Status :: 1 - Planning',
         'Intended Audience :: Developers',
