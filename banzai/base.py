@@ -41,6 +41,8 @@ class MailPackage(object):
                               xml_declaration=True)
 
     def _generate(self):
+        if self._generation_complete:
+            return
         body_tag = etree.Element('body')
 
         data_tag = etree.Element('Data')
