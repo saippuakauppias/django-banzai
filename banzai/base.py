@@ -1,5 +1,11 @@
+import hashlib
 from lxml import etree
+from datetime import datetime
 
+from django.conf import settings
+from django.core.files.base import ContentFile
+
+from banzai.models import Package
 from banzai.settings import (BANZAI_API_DOMAIN, BANZAI_API_VERSION,
                              BANZAI_API_KEY)
 
@@ -20,6 +26,7 @@ class MailPackage(object):
         self._users_data = []
         self._xml = etree.Element('list')
         self._generation_complete = False
+        self._package = None
 
     def add_user(self, email_to, name_to=u'', header={}, fields={}):
         if self._generation_complete:
@@ -33,7 +40,20 @@ class MailPackage(object):
         })
 
     def save(self):
-        pass
+        if self._package is None:
+            file_name = '{0}#{1}'.format(datetime.now(), settings.SECRET_KEY)
+            file_name = hashlib.md5(file_name).hexdigest()
+            file_name = '{0}.xml'.format(file_name)
+
+            package_obj = Package(
+                emails_all=len(self._users_data),
+                description=self.description
+            )
+            xml_content = ContentFile(self.xml_tostring())
+            package_obj.file.save(file_name, xml_content)
+            package_obj.save()
+            self._package = package_obj
+        return self._package
 
     def xml_tostring(self):
         self._generate()
