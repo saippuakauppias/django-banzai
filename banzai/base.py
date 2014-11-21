@@ -192,7 +192,29 @@ class BanzaiAPI(object):
         self._package.save()
 
     def fast_add(self):
-        pass
+        get_params = {'key': self._api_key}
+        post_data = {
+            'package': self._package.file.read(),
+            'description': self._package.description
+        }
+        api_url = '{0}fast_add_package'.format(self._api_url)
+        req = requests.post(api_url, params=get_params, data=post_data)
+
+        elem = self._parse_xml(req.content)
+
+        pack_id = elem.find('pack_id')
+        if pack_id is not None:
+            self._package.pack_id = pack_id.text
+
+        status = elem.find('status')
+        if status is not None:
+            self._package.status = status.text
+
+        user_count = elem.find('user_count')
+        if user_count is not None:
+            self._package.emails_correct = user_count.text
+
+        self._package.save()
 
     def check(self):
         pass
