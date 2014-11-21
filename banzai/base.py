@@ -237,7 +237,17 @@ class BanzaiAPI(object):
         self._package.save()
 
     def status(self):
-        pass
+        get_params = {'key': self._api_key, 'pack_id': self._package.pack_id}
+        api_url = '{0}package_status'.format(self._api_url)
+        req = requests.get(api_url, params=get_params)
+
+        elem = self._parse_xml(req.content)
+
+        status = elem.find('status')
+        if status is not None:
+            self._package.status = status.text
+
+        self._package.save()
 
     def report(self):
         pass
