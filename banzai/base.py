@@ -217,7 +217,24 @@ class BanzaiAPI(object):
         self._package.save()
 
     def check(self):
-        pass
+        get_params = {'key': self._api_key}
+        post_data = {
+            'package': self._package.file.read(),
+        }
+        api_url = '{0}check_package'.format(self._api_url)
+        req = requests.post(api_url, params=get_params, data=post_data)
+
+        elem = self._parse_xml(req.content)
+
+        status = elem.find('status')
+        if status is not None:
+            self._package.status = status.text
+
+        user_count = elem.find('user_count')
+        if user_count is not None:
+            self._package.emails_correct = user_count.text
+
+        self._package.save()
 
     def status(self):
         pass
