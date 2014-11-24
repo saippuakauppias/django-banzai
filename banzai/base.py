@@ -154,8 +154,8 @@ class BanzaiAPI(object):
         self._package_url = None
 
         self._api_key = BANZAI_API_KEY
-        self._api_url = 'http://{0}/api/{1}/'.format(BANZAI_API_DOMAIN,
-                                                     BANZAI_API_VERSION)
+        self._base_api_url = 'http://{0}/api/{1}/'.format(BANZAI_API_DOMAIN,
+                                                          BANZAI_API_VERSION)
 
     @property
     def package_url(self):
@@ -169,6 +169,9 @@ class BanzaiAPI(object):
             self._package_url = url
         return self._package_url
 
+    def _api_url(self, method):
+        return '{0}{1}'.format(self._base_api_url, method)
+
     def _parse_xml(self, data):
         parser = etree.XMLParser()
         parser.feed(data)
@@ -176,8 +179,7 @@ class BanzaiAPI(object):
 
     def add(self):
         get_params = {'key': self._api_key, 'url': self.package_url}
-        api_url = '{0}add_package'.format(self._api_url)
-        req = requests.get(api_url, params=get_params)
+        req = requests.get(self._api_url('add_package'), params=get_params)
 
         elem = self._parse_xml(req.content)
 
@@ -197,8 +199,8 @@ class BanzaiAPI(object):
             'package': self._package.file.read(),
             'description': self._package.description
         }
-        api_url = '{0}fast_add_package'.format(self._api_url)
-        req = requests.post(api_url, params=get_params, data=post_data)
+        req = requests.post(self._api_url('fast_add_package'),
+                            params=get_params, data=post_data)
 
         elem = self._parse_xml(req.content)
 
@@ -221,8 +223,8 @@ class BanzaiAPI(object):
         post_data = {
             'package': self._package.file.read(),
         }
-        api_url = '{0}check_package'.format(self._api_url)
-        req = requests.post(api_url, params=get_params, data=post_data)
+        req = requests.post(self._api_url('check_package'),
+                            params=get_params, data=post_data)
 
         elem = self._parse_xml(req.content)
 
@@ -238,8 +240,7 @@ class BanzaiAPI(object):
 
     def status(self):
         get_params = {'key': self._api_key, 'pack_id': self._package.pack_id}
-        api_url = '{0}package_status'.format(self._api_url)
-        req = requests.get(api_url, params=get_params)
+        req = requests.get(self._api_url('package_status'), params=get_params)
 
         elem = self._parse_xml(req.content)
 
