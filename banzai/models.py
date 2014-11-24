@@ -67,9 +67,10 @@ class Report(models.Model):
     status = models.CharField(_('status code'), choices=STATUS_CODES,
                               max_length=4, blank=True)
 
-    email = models.EmailField(_('email'))
-    reject_code = models.CharField(_('reject code'), max_length=250)
-    reject_message = models.TextField(_('reject message'))
+    email = models.EmailField(_('email'), blank=True)
+    reject_code = models.CharField(_('reject code'), max_length=250,
+                                   blank=True)
+    reject_message = models.TextField(_('reject message'), blank=True)
 
     class Meta:
         verbose_name = _('report')
