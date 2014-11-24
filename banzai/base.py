@@ -192,6 +192,7 @@ class BanzaiAPI(object):
             self._package.status = status.text
 
         self._package.save()
+        return self._package
 
     def fast_add(self):
         get_params = {'key': self._api_key}
@@ -217,6 +218,7 @@ class BanzaiAPI(object):
             self._package.emails_correct = user_count.text
 
         self._package.save()
+        return self._package
 
     def check(self):
         get_params = {'key': self._api_key}
@@ -237,6 +239,10 @@ class BanzaiAPI(object):
             self._package.emails_correct = user_count.text
 
         self._package.save()
+        return {
+            'status': self._package.status,
+            'emails_correct': self._package.emails_correct
+        }
 
     def status(self):
         get_params = {'key': self._api_key, 'pack_id': self._package.pack_id}
@@ -249,6 +255,7 @@ class BanzaiAPI(object):
             self._package.status = status.text
 
         self._package.save()
+        return self._package.status
 
     def report(self):
         get_params = {'key': self._api_key, 'pack_id': self._package.pack_id}
@@ -287,6 +294,7 @@ class BanzaiAPI(object):
                     package=self._package,
                     status=status.text
                 )
+        return self._package.reports.all()
 
     def report_fbl(self):
         get_params = {'key': self._api_key, 'pack_id': self._package.pack_id}
@@ -314,6 +322,7 @@ class BanzaiAPI(object):
                     package=self._package,
                     status=status.text
                 )
+        return self._package.reports_fbl.all()
 
     def stop(self):
         pass
