@@ -8,7 +8,7 @@ from django.core.files.base import ContentFile
 
 import requests
 
-from banzai.models import Package
+from banzai.models import Package, Report
 from banzai.settings import (BANZAI_API_DOMAIN, BANZAI_API_VERSION,
                              BANZAI_API_KEY)
 
@@ -251,7 +251,42 @@ class BanzaiAPI(object):
         self._package.save()
 
     def report(self):
-        pass
+        get_params = {'key': self._api_key, 'pack_id': self._package.pack_id}
+        req = requests.get(self._api_url('package_report'), params=get_params)
+
+        elem = self._parse_xml(req.content)
+
+        items = elem.findall('item')
+        for item in items:
+            email = ''
+            reject_code = ''
+            reject_message = ''
+
+            email_elem = item.find('email')
+            if email_elem is not None:
+                email = email_elem.text
+
+            code_elem = item.find('code')
+            if code_elem is not None:
+                reject_code = code_elem.text
+
+            message_elem = item.find('message')
+            if message_elem is not None:
+                reject_message = message_elem.text
+
+            report_obj, _ = Report.objects.get_or_create(
+                package=self._package,
+                email=email,
+                reject_code=reject_code,
+                reject_message=reject_message,
+            )
+        else:
+            status = elem.find('status')
+            if status is not None:
+                report_obj, _ = Report.objects.get_or_create(
+                    package=self._package,
+                    status=status.text
+                )
 
     def report_fbl(self):
         pass
