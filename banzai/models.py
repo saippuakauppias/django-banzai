@@ -63,7 +63,8 @@ class Package(models.Model):
 
 class Report(models.Model):
 
-    package = models.ForeignKey(Package, verbose_name=_('package'))
+    package = models.ForeignKey(Package, verbose_name=_('package'),
+                                related_name='reports')
     status = models.CharField(_('status code'), choices=STATUS_CODES,
                               max_length=4, blank=True)
 
@@ -85,7 +86,8 @@ class Report(models.Model):
 
 class ReportFBL(models.Model):
 
-    package = models.ForeignKey(Package, verbose_name=_('package'))
+    package = models.ForeignKey(Package, verbose_name=_('package'),
+                                related_name='reports_fbl')
     status = models.CharField(_('status code'), choices=STATUS_CODES,
                               max_length=4, blank=True)
     email = models.EmailField(_('email'))
