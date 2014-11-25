@@ -27,6 +27,20 @@ class MailPackage(object):
         self._generation_complete = False
         self._package = None
 
+    def add_users(self, users_list):
+        for user in users_list:
+            if isinstance(user, {}):
+                self.add_user(
+                    user['email_to'],
+                    user.get('name_to', u''),
+                    user.get('header', {}),
+                    user.get('fields', {})
+                )
+            elif isinstance(user, (str, unicode)):
+                self.add_user(user)
+            else:
+                raise RuntimeError('users_list must be a dict or string!')
+
     def add_user(self, email_to, name_to=u'', header={}, fields={}):
         if self._generation_complete:
             raise RuntimeError('Impossibly add user, because '
