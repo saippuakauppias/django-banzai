@@ -22,30 +22,30 @@ class MailPackage(object):
         self.attach_images = attach_images
         self.description = description
 
-        self._users_data = []
+        self._recipients_data = []
         self._xml = etree.Element('list')
         self._generation_complete = False
         self._package = None
 
-    def add_users(self, users_list):
-        for user in users_list:
-            if isinstance(user, {}):
-                self.add_user(
-                    user['email_to'],
-                    user.get('name_to', u''),
-                    user.get('header', {}),
-                    user.get('fields', {})
+    def add_recipients(self, recipients_list):
+        for recipient in recipients_list:
+            if isinstance(recipient, {}):
+                self.add_recipient(
+                    recipient['email_to'],
+                    recipient.get('name_to', u''),
+                    recipient.get('header', {}),
+                    recipient.get('fields', {})
                 )
-            elif isinstance(user, (str, unicode)):
-                self.add_user(user)
+            elif isinstance(recipient, (str, unicode)):
+                self.add_recipient(recipient)
             else:
-                raise RuntimeError('users_list must be a dict or string!')
+                raise RuntimeError('recipients_list must be a dict or string!')
 
-    def add_user(self, email_to, name_to=u'', header={}, fields={}):
+    def add_recipient(self, email_to, name_to=u'', header={}, fields={}):
         if self._generation_complete:
-            raise RuntimeError('Impossibly add user, because '
+            raise RuntimeError('Impossibly add recipient, because '
                                'generation already complete!')
-        self._users_data.append({
+        self._recipients_data.append({
             'email_to': email_to,
             'name_to': name_to,
             'header': header,
@@ -59,7 +59,7 @@ class MailPackage(object):
             file_name = '{0}.xml'.format(file_name)
 
             package_obj = Package(
-                emails_all=len(self._users_data),
+                emails_all=len(self._recipients_data),
                 description=self.description
             )
             xml_content = ContentFile(self.xml_tostring())
@@ -121,28 +121,28 @@ class MailPackage(object):
         del body_tag
 
         users_tag = etree.Element('users')
-        for user in self._users_data:
+        for recipient in self._recipients_data:
             current_user_tag = etree.Element('user')
 
             email_to_tag = etree.Element('EmailTo')
-            email_to_tag.text = etree.CDATA(user['email_to'])
+            email_to_tag.text = etree.CDATA(recipient['email_to'])
             current_user_tag.append(email_to_tag)
             del email_to_tag
 
-            if user['name_to']:
+            if recipient['name_to']:
                 name_to_tag = etree.Element('NameTo')
-                name_to_tag.text = etree.CDATA(user['name_to'])
+                name_to_tag.text = etree.CDATA(recipient['name_to'])
                 current_user_tag.append(name_to_tag)
                 del name_to_tag
 
-            if user['header']:
+            if recipient['header']:
                 header_tag = etree.Element('Header')
-                header_tag.attrib['name'] = user['header']['name']
-                header_tag.attrib['value'] = user['header']['value']
+                header_tag.attrib['name'] = recipient['header']['name']
+                header_tag.attrib['value'] = recipient['header']['value']
                 current_user_tag.append(header_tag)
                 del header_tag
 
-            for field in user['fields']:
+            for field in recipient['fields']:
                 field_tag = etree.Element(field['name'])
                 field_tag.text = etree.CDATA(field['value'])
                 current_user_tag.append(field_tag)
