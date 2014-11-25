@@ -29,7 +29,7 @@ class MailPackage(object):
 
     def add_recipients(self, recipients_list):
         for recipient in recipients_list:
-            if isinstance(recipient, {}):
+            if isinstance(recipient, dict):
                 self.add_recipient(
                     recipient['email_to'],
                     recipient.get('name_to', u''),

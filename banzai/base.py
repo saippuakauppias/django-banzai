@@ -13,10 +13,10 @@ def send_mail(subject, message, from_email, recipient_list, **kwargs):
     attach_images = kwargs.pop('attach_images', u'0')
     description = kwargs.pop('description', u'')
 
-    package = MailPackage(from_email, current_site.name, subject, message,
-                          send_at, headers, attach_images, description)
-    package.add_recipients(recipient_list)
-    package.save()
+    mail_package = MailPackage(from_email, current_site.name, subject, message,
+                               send_at, headers, attach_images, description)
+    mail_package.add_recipients(recipient_list)
+    package = mail_package.save()
 
     banzai_api_obj = BanzaiAPI(package)
     if package.emails_all < BANZAI_API_FAST_ADD_METHOD_RECIPIENTS_MAX_COUNT:
