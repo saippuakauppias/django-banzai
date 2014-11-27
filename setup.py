@@ -21,7 +21,7 @@ setup(
     packages=find_packages(),
     install_requires=['requests', 'lxml', 'django'],
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
