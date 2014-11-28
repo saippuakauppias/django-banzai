@@ -28,6 +28,8 @@ class MailPackage(object):
         self._package = None
 
     def add_recipients(self, recipients_list):
+        if isinstance(recipients_list, dict):
+            recipients_list = [recipients_list]
         for recipient in recipients_list:
             if isinstance(recipient, dict):
                 self.add_recipient(
