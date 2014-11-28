@@ -1,5 +1,6 @@
+# coding: utf-8
+
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
 
 from banzai.models import Package, Report, ReportFBL
 
@@ -8,7 +9,7 @@ class ReportInline(admin.StackedInline):
 
     extra = 0
     model = Report
-    verbose_name = _('report')
+    verbose_name = u'Отчёт'
     readonly_fields = ('status', 'email', 'reject_code', 'reject_message',)
 
     def has_add_permission(self, request):
@@ -22,7 +23,7 @@ class ReportFBLInline(admin.StackedInline):
 
     extra = 0
     model = ReportFBL
-    verbose_name = _('feedback list report')
+    verbose_name = u'Отчёт о FBL'
     readonly_fields = ('status', 'email',)
 
     def has_add_permission(self, request):

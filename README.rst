@@ -1,34 +1,34 @@
 django-banzai
 =============
 
-Python API Wrapper for `get-n-post.ru <http://get-n-post.ru/>`_ service.
+API обёртка на Python над сервисом `get-n-post.ru <http://get-n-post.ru/>`_.
 
-Requirements
-------------
+Зависимости
+-----------
 
-`requests <https://pypi.python.org/pypi/requests>`_ and `lxml <https://pypi.python.org/pypi/lxml>`_.
+Пакету требуются: `requests <https://pypi.python.org/pypi/requests>`_ и `lxml <https://pypi.python.org/pypi/lxml>`_.
 
-Installation
-------------
+Установка и настройка
+---------------------
 
-Installing with pip::
+Установить пакет из PyPI::
 
     $ pip install django-banzai
 
-Add ``banzai`` in ``INSTALLED_APPS``.
+Добавить приложение ``banzai`` в ваши ``INSTALLED_APPS``.
 
-Fill your API key in ``BANZAI_API_KEY`` settings.
+Заполнить в настройках ``BANZAI_API_KEY`` - API-ключ, сгенерированный сервисом для вашего IP-адреса.
 
-Usage
------
+Использование
+-------------
 
-Send email with django compatible syntax::
+Отправить email с django-совместимым синтаксисом::
 
     from banzai.base import send_mail
 
     send_mail('subject', 'mail body', 'from@myprojectand.me', ['to@lovely.users'])
 
-Or send emails with get-n-post principles::
+Или отправить email согласно принципам get-n-post::
 
     from banzai.mail import MailPackage
     from banzai.api import BanzaiAPI

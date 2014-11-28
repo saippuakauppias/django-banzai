@@ -1,60 +1,60 @@
+# coding: utf-8
+
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 
 
 STATUS_GOOD_CODES = (
-    ('S001', _('The package was not found at the specified URL')),
-    ('S002', _('The package is uploaded to the server')),
-    ('S004', _('The package is sent')),
-    ('S005', _('The package is mailed. The expected removal '
-               'of information about the package from the system.')),
-    ('S006', _('While sending errors occurred')),
-    ('S007', _('Invalid packet format')),
-    ('S008', _('Has timed out the server response')),
-    ('S009', _('Package received')),
-    ('S010', _('The package is checked')),
-    ('S011', _('The packet is processed (formed message)')),
-    ('S012', _('The package is queued for deletion')),
-    ('S013', _('The package is deleted. The messages stopped.')),
-    ('S015', _('The number of addressees exceeds this limit')),
-    ('S018', _('The package is mailed. Package information removed.')),
-    ('S019', _('The package is checked. Will be sent at the specified time.')),
+    ('S001', u'Пакет не был найден по указанному URL'),
+    ('S002', u'Пакет загружен на сервер'),
+    ('S004', u'Пакет рассылается'),
+    ('S005', u'Пакет отправлен, ожидаем удаление информации о '
+             u'пакете из системы'),
+    ('S006', u'Во время отправки произошли ошибки'),
+    ('S007', u'Некорректный формат пакета'),
+    ('S008', u'Превышено время ожидания ответа сервера'),
+    ('S009', u'Пакет получен'),
+    ('S010', u'Пакет проверяется'),
+    ('S011', u'Пакет обрабатывается (формируются сообщения)'),
+    ('S012', u'Пакет поставлен в очередь на удаление'),
+    ('S013', u'Пакет удален. Рассылка сообщений прекращена'),
+    ('S015', u'Количество адресатов превышает установленный лимит'),
+    ('S018', u'Пакет отправлен. Информация о пакете удалена'),
+    ('S019', u'Пакет проверен, будет разослан в указанное время'),
 )
 STATUS_ERROR_CODES = (
-    ('E000', _('The secret key specified in the parameters of '
-               'the operation, is not recognized')),
-    ('E001', _('Not given URL')),
-    ('E002', _('Not transferred pack_id')),
-    ('E003', _('Information about the package not found')),
-    ('E004', _('Not enough traffic')),
-    ('E005', _('Not paid rate')),
-    ('E006', _('Incorrect data in the package')),
+    ('E000', u'Секретный ключ, указанный в параметрах операции, не опознан'),
+    ('E001', u'Не передан URL'),
+    ('E002', u'Не передан pack_id'),
+    ('E003', u'Информация о пакете не найдена'),
+    ('E004', u'Недостаточно трафика'),
+    ('E005', u'Не оплачен тариф'),
+    ('E006', u'Некорректные данные в пакете'),
 )
 STATUS_CODES = STATUS_GOOD_CODES + STATUS_ERROR_CODES
 
 
 class Package(models.Model):
 
-    file = models.FileField(_('xml package'),
+    file = models.FileField(u'пакет в xml-формате',
                             upload_to='django_banzai/package')
-    status = models.CharField(_('status code'), choices=STATUS_CODES,
+    status = models.CharField(u'статус', choices=STATUS_CODES,
                               max_length=4, blank=True)
-    pack_id = models.CharField(_('package ID'), max_length=100,
+    pack_id = models.CharField(u'ID пакета в системе', max_length=100,
                                blank=True)
 
-    emails_all = models.PositiveIntegerField(_('emails all'))
-    emails_correct = models.PositiveIntegerField(_('emails correct'),
+    emails_all = models.PositiveIntegerField(u'emailов всего')
+    emails_correct = models.PositiveIntegerField(u'emailов корректных',
                                                  default=0)
 
-    description = models.CharField(_('description'), max_length=100,
+    description = models.CharField(u'описание пакета', max_length=100,
                                    blank=True)
 
     class Meta:
-        verbose_name = _('package')
-        verbose_name_plural = _('packages')
+        verbose_name = u'пакет'
+        verbose_name_plural = u'пакеты'
 
     def __unicode__(self):
-        return u'ID: {0}, status: "{1}", description: "{2}"'.format(
+        return u'ID: {0}, Статус: "{1}", Описание пакета: "{2}"'.format(
             self.pk,
             self.status,
             self.description
@@ -63,22 +63,22 @@ class Package(models.Model):
 
 class Report(models.Model):
 
-    package = models.ForeignKey(Package, verbose_name=_('package'),
+    package = models.ForeignKey(Package, verbose_name=u'пакет',
                                 related_name='reports')
-    status = models.CharField(_('status code'), choices=STATUS_CODES,
+    status = models.CharField(u'статус', choices=STATUS_CODES,
                               max_length=4, blank=True)
 
-    email = models.EmailField(_('email'), blank=True)
-    reject_code = models.CharField(_('reject code'), max_length=250,
+    email = models.EmailField(u'email', blank=True)
+    reject_code = models.CharField(u'код ошибки', max_length=250,
                                    blank=True)
-    reject_message = models.TextField(_('reject message'), blank=True)
+    reject_message = models.TextField(u'сообщение об ошибке', blank=True)
 
     class Meta:
-        verbose_name = _('report')
-        verbose_name_plural = _('reports')
+        verbose_name = u'отчёт'
+        verbose_name_plural = u'отчёты'
 
     def __unicode__(self):
-        return u'Email: {0}, Reject code: "{1}"'.format(
+        return u'Email: {0}, Код ошибки: "{1}"'.format(
             self.email,
             self.reject_code
         )
@@ -86,15 +86,15 @@ class Report(models.Model):
 
 class ReportFBL(models.Model):
 
-    package = models.ForeignKey(Package, verbose_name=_('package'),
+    package = models.ForeignKey(Package, verbose_name=u'пакет',
                                 related_name='reports_fbl')
-    status = models.CharField(_('status code'), choices=STATUS_CODES,
+    status = models.CharField(u'статус', choices=STATUS_CODES,
                               max_length=4, blank=True)
-    email = models.EmailField(_('email'))
+    email = models.EmailField(u'email')
 
     class Meta:
-        verbose_name = _('feedback list report')
-        verbose_name_plural = _('feedback list reports')
+        verbose_name = u'отчёт о FBL'
+        verbose_name_plural = u'отчёты о FBL'
 
     def __unicode__(self):
         return self.email
