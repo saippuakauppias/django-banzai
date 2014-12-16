@@ -36,9 +36,9 @@ class ReportFBLInline(admin.StackedInline):
 class PackageAdmin(admin.ModelAdmin):
 
     list_display = ('id', 'description', 'status', 'pack_id', 'emails_all',
-                    'emails_correct',)
+                    'emails_correct', 'created_on',)
     readonly_fields = ('file', 'status', 'pack_id', 'emails_all',
-                       'emails_correct', 'description',)
+                       'emails_correct', 'description', 'created_on',)
     inlines = (ReportInline, ReportFBLInline,)
 
     def has_add_permission(self, request):

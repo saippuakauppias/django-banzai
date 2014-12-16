@@ -46,6 +46,7 @@ class Package(models.Model):
     emails_correct = models.PositiveIntegerField(u'emailов корректных',
                                                  default=0)
 
+    created_on = models.DateTimeField(u'пакет создан', auto_now_add=True)
     description = models.CharField(u'описание пакета', max_length=100,
                                    blank=True)
 
