@@ -8,7 +8,7 @@ def read(filename):
 
 setup(
     name='django-banzai',
-    version='0.1',
+    version='0.2',
     license='MIT',
     description='Django API wrapper for mailing delivery '
                 'service: http://get-n-post.ru/',
