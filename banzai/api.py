@@ -1,7 +1,6 @@
 import requests
 from lxml import etree
 
-from django.conf import settings
 from django.contrib.sites.models import Site
 
 from banzai.models import Report, ReportFBL
@@ -23,9 +22,8 @@ class BanzaiAPI(object):
     def package_url(self):
         if self._package_url is None:
             current_site = Site.objects.get_current()
-            url = 'http://{0}{1}{2}'.format(
+            url = 'http://{0}{1}'.format(
                 current_site.domain,
-                settings.MEDIA_URL,
                 self._package.file.url
             )
             self._package_url = url
